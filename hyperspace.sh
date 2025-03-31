@@ -145,7 +145,18 @@ function deploy_hyperspace_node() {
             echo "模型添加成功并且下载完成！"
             break
         else
-            echo "添加模型时发生错误，正在重试..."
+            echo "添加模型时发生错误，正在尝试其他模型版本..."
+            # 尝试其他模型版本
+            if [ "$model" = "hf:TheBloke/phi-2-GGUF:phi-2.Q2_K_S.gguf" ]; then
+                model="hf:TheBloke/phi-2-GGUF:phi-2.Q2_K.gguf"
+            elif [ "$model" = "hf:TheBloke/phi-2-GGUF:phi-2.Q2_K.gguf" ]; then
+                model="hf:TheBloke/phi-2-GGUF:phi-2.Q3_K_S.gguf"
+            elif [ "$model" = "hf:TheBloke/phi-2-GGUF:phi-2.Q3_K_S.gguf" ]; then
+                model="hf:TheBloke/phi-2-GGUF:phi-2.Q3_K.gguf"
+            else
+                echo "所有尝试的模型版本都失败，请检查CPU兼容性或联系支持"
+                exit 1
+            fi
             sleep 3
         fi
     done
